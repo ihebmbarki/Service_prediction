@@ -1,7 +1,13 @@
+import uuid
 from typing import Optional
 from fastapi import FastAPI, APIRouter
 from fastapi import FastAPI, File, UploadFile
-router= APIRouter()
+
+from Service.FileService import FileService
+
+router = APIRouter()
+
+fileService = FileService()
 
 @router.get("/")
 def read_root():
@@ -12,7 +18,15 @@ def read_root():
 def read_item(item_id: int, q: Optional[str] = None):
     return {"item_id": item_id, "q": q}
 
-@router.post("/uploadfile/")
+@router.post("/predict_disease/")
 async def create_upload_file(file: UploadFile):
-    return {"filename": file.filename}
+    file.filename = f"{uuid.uuid4()}.jpg"
+    contents = await file.read()  # <-- Important!
+    IMAGEDIR = "Service/"
+    with open(f"{IMAGEDIR}{file.filename}", "wb") as f:
+        f.write(contents)
+
+
+    results = fileService.prediction_results(contents, file.filename)
+    return results
 
