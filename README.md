@@ -53,11 +53,7 @@ INFO:     Application startup complete.
 >Installation
 
 ```
-pip install h5py
-pip install serum
-pip install keras
-pip install python-multipart
-pip install Pillow
+pip3 install -r requirements.txt 
 
 ```
 
